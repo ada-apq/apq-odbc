@@ -50,34 +50,135 @@ package APQ.ODBC.Client is
 	type ODBC_Connection_Type is new APQ.Root_Connection_Type with private;
 
 
+	type ODBC_Query_Type is new APQ.Root_Query_Type with private;
+
+
+
+
 	--Methods inherited from Root_Connection_Type
 	function Engine_Of(C : ODBC_Connection_Type) return Database_Type;
 
+
 	procedure Connect(C : in out ODBC_Connection_Type);
+
 	procedure Connect(C : in out ODBC_Connection_Type;
 		Same_As : Root_Connection_Type'Class);
+
 	procedure Disconnect(C : in out ODBC_Connection_Type);
+
 	function Is_Connected(C : ODBC_Connection_Type) return Boolean;
+
 	procedure Reset(C : in out ODBC_Connection_Type);
 
+
 	function Error_Message(C : ODBC_Connection_Type) return String;
+
 	procedure Open_DB_Trace(C : in out ODBC_Connection_Type;
 		Filename : String; Mode : Trace_Mode_Type := Trace_APQ);
 
+
 	function Query_Factory( C: in ODBC_Connection_Type )
 			return Root_Query_Type'Class;
+
+
+
+
+	--Methods inherited from Root_Query_Type
+	function Engine_Of(Q : ODBC_Query_Type) return Database_Type;
+
+
+	procedure Execute(Query : in out ODBC_Query_Type;
+		   Connection : in out Root_Connection_Type'Class);
+
+	procedure Execute_Checked(Query : in out ODBC_Query_Type;
+			   Connection : in out Root_Connection_Type'Class;
+			   Msg : String := "");
+
+
+	procedure Begin_Work(Query : in out ODBC_Query_Type;
+		Connection : in out Root_Connection_Type'Class);
+
+	procedure Commit_Work(Query : in out ODBC_Query_Type;
+		Connection : in out Root_Connection_Type'Class);
+
+	procedure Rollback_Work(Query : in out ODBC_Query_Type;
+		Connection : in out Root_Connection_Type'Class);
+
+
+	procedure Rewind(Q : in out ODBC_Query_Type);
+
+	procedure Fetch(Q : in out ODBC_Query_Type);
+
+	procedure Fetch(Q : in out ODBC_Query_Type; TX : Tuple_Index_Type);
+
+
+	function End_of_Query(Q : ODBC_Query_Type) return Boolean;
+
+
+	function Tuple(Q : ODBC_Query_Type) return Tuple_Index_Type;
+
+	function Tuples(Q : ODBC_Query_Type) return Tuple_Count_Type;
+
+	function Columns(Q : ODBC_Query_Type) return Natural;
+
+
+	function Value(Query : ODBC_Query_Type; CX : Column_Index_Type)
+		return String;
+
+
+	function Column_Name(Query : ODBC_Query_Type; Index : Column_Index_Type)
+		      return String;
+
+	function Column_Index(Query : ODBC_Query_Type; Name : String)
+		       return Column_Index_Type;
+
+
+	function Result(Query : ODBC_Query_Type) return Natural;
+
+	function Is_Null(Q : ODBC_Query_Type; CX : Column_Index_Type)
+		  return Boolean;
+
+
+	function Command_Oid(Query : ODBC_Query_Type) return Row_ID_Type;
+
+	function Null_Oid(Query : ODBC_Query_Type) return Row_ID_Type;
+
+
+	function Error_Message(Query : ODBC_Query_Type) return String;
+
+
+	function Is_Duplicate_Key(Query : ODBC_Query_Type) return Boolean;
+
+
+	function SQL_Code(Query : ODBC_Query_Type) return SQL_Code_Type;
+
+
+
 
 private
 
 	type ODBC_Connection_Type is new APQ.Root_Connection_Type with
 		record
-			Connected : Boolean := false;
 			Facade    : ODBC_Facade;
 		end record;
 
 
+	type ODBC_Query_Type is new APQ.Root_Query_Type with
+		record
+			PlaceHolder : Integer;
+		end record;
+
+
+
+
 	--Methods inherited from Limited_Controlled
 	procedure Initialize(C : in out ODBC_Connection_Type);
+
 	procedure Finalize(C : in out ODBC_Connection_Type);
+
+
+	procedure Initialize(C : in out ODBC_Query_Type);
+
+	procedure Finalize(C : in out ODBC_Query_Type);
 
 end APQ.ODBC.Client;

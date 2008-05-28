@@ -33,27 +33,50 @@ package APQ.ODBC is
 
 private
 
+	--This is just a return type representing the boolean enum in C.
+	type C_Bool is new Integer range 0..1;
+
+
 	--This type points to the C struct, ODBC_Facade.
 	type ODBC_Facade is new System.Address;
 
+	--This type points to the results of a query.
+	type ODBC_Query_Results is new System.Address;
+
+
+
+
+	--Converts the C enum to the Ada type.
+	function C_Bool_To_Boolean (Bool : C_Bool) return Boolean;
+
+
 	--?
 	--TODO: An Ada function should be used to free the strings when done.
-	procedure  Pass_On_Login_Information (Facade : in out ODBC_Facade;
-				       User_Name, Password, Data_Source :
-				       in APQ.String_Ptr);
+	procedure ODBC_Login (Facade : in out ODBC_Facade;
+			User_Name, Password, Data_Source : in APQ.String_Ptr);
 
 	--This function should be used to create new ODBC_Facades.
 	function New_ODBC_Facade return ODBC_Facade;
 	pragma import(C, New_ODBC_Facade, "new_ODBC_Facade");
 
-	--This function sets up the login information of an ODBC_Facade.
-	procedure Set_Up_ODBC_Facade_Login(Facade : in ODBC_Facade;
-				    User_Name, Password, Data_Source
-				    : in System.Address);
-	pragma import(C, Set_Up_ODBC_Facade_Login, "set_Up_ODBC_Facade_Login");
+	--This function sets up the login information and connects with the DS.
+	procedure Log_Into_Data_Source (Facade : in ODBC_Facade;
+				 User_Name, Password, Data_Source
+				 : in System.Address);
+	pragma import(C, Log_Into_Data_Source, "log_Into_Data_Source");
 
-	--This function makes connection to the DataSource.
-	procedure Connect_With_Data_Source(Facade : in ODBC_Facade);
-	pragma import(C, Connect_With_Data_Source, "connect_With_Data_Source");
+	--C function, returns true if ODBC_Facade believes to be connected.
+	function Facade_Is_Connected (Facade : ODBC_Facade) return C_Bool;
+	pragma import(C, Facade_Is_Connected, "is_Connected");
+
+	function Create_And_Run_SQL_Statement (Facade : ODBC_Facade;
+					new_SQL_Statement : System.Address)
+		return ODBC_Query_Results;
+	pragma import(C, Create_And_Run_SQL_Statement,
+	       "create_And_Run_SQL_Statement");
+
+	function Execute_SQL_Statement (Facade : in ODBC_Facade;
+				 SQL_Statement : in String)
+				 return ODBC_Query_Results;
 
 end APQ.ODBC;

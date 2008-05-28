@@ -31,11 +31,22 @@
 
 package body APQ.ODBC is
 
-	procedure  Pass_On_Login_Information (Facade : in out ODBC_Facade;
-				       User_Name, Password, Data_Source :
-				       in String_Ptr) is
+	function C_Bool_To_Boolean (Bool : C_Bool) return Boolean is
+	begin
+		if Bool = 0 then
+			return False;
+		else
+			return True;
+		end if;
+	end C_Bool_To_Boolean;
+
+
+
+
+	procedure  ODBC_Login (Facade : in out ODBC_Facade;
+			User_Name, Password, Data_Source : in String_Ptr) is
 		use Interfaces.C.Strings;
-		Dummy		: char_array_access;
+		Dummy		: char_array_access; --TODO: Remove this Dummy.
 		C_User_Name	: System.Address := System.Null_Address;
 		C_Password	: System.Address := System.Null_Address;
 		C_Data_Source	: System.Address := System.Null_Address;
@@ -44,9 +55,28 @@ package body APQ.ODBC is
 		C_String(To_String(Password), Dummy, C_Password);
 		C_String(To_String(Data_Source), Dummy, C_Data_Source);
 
-		Set_Up_ODBC_Facade_Login(Facade => Facade, User_Name =>
-				   C_User_Name, Password => C_Password,
-			   	   Data_Source => C_Data_Source);
-	end Pass_On_Login_Information;
+		Log_Into_Data_Source(Facade => Facade, User_Name =>
+			       C_User_Name, Password => C_Password,
+		       Data_Source => C_Data_Source);
+	end ODBC_Login;
+
+
+	function Execute_SQL_Statement (Facade : in ODBC_Facade;
+				 SQL_Statement : in String)
+				 return ODBC_Query_Results is
+		use interfaces.C.Strings;
+		Dummy		: char_array_access; --TODO: Remove this Dummy.
+		C_SQL_Statement	: System.Address := System.Null_Address;
+		Return_Value	: ODBC_Query_Results;
+	begin
+
+		C_String(SQL_Statement, Dummy, C_SQL_Statement);
+		--Converts the sql statement of the query to a C string.
+
+		Return_Value := Create_And_Run_SQL_Statement(
+			Facade => Facade, new_SQL_Statement => C_SQL_Statement);
+
+		return Return_Value;
+	end Execute_SQL_Statement;
 
 end APQ.ODBC;
