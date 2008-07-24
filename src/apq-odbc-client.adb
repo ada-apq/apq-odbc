@@ -104,8 +104,6 @@ package body APQ.ODBC.Client is
 
 	procedure Execute(Query : in out ODBC_Query_Type;
 		   Connection : in out Root_Connection_Type'Class) is
-		Real_Connection	: ODBC_Connection_Type
-			:= ODBC_Connection_Type(Connection);
 		SQL_Statement	: String
 			:= To_String(Query);
 		Dummy		:	 ODBC_Query_Results;
@@ -114,7 +112,7 @@ package body APQ.ODBC.Client is
 		Ada.Text_IO.Put("The electricity will run through your body...");
 
 		Dummy := Execute_SQL_Statement(Facade =>
-					 Real_Connection.Facade,
+					 ODBC_Connection_Type(Connection).Facade,
 				 SQL_Statement => SQL_Statement);
 	end Execute;
 
