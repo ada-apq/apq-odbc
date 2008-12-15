@@ -39,10 +39,10 @@ package body APQ.ODBC.Client is
 	end Engine_Of;
 
 
-	procedure Connect(C : in out ODBC_Connection_Type) is
+	procedure Connect(C : in out ODBC_Connection_Type; Check_Connection : Boolean := True) is
 	begin
 
-		if Is_Connected(C) then
+		if Check_Connection and then Is_Connected(C) then
 			--TODO: Make an exception throw here
 			Ada.Text_IO.Put_Line("Error: Already Connecter");
 			return;

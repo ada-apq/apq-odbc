@@ -59,7 +59,7 @@ package APQ.ODBC.Client is
 	function Engine_Of(C : ODBC_Connection_Type) return Database_Type;
 
 
-	procedure Connect(C : in out ODBC_Connection_Type);
+	procedure Connect(C : in out ODBC_Connection_Type; Check_Connection : Boolean := True);
 
 	procedure Connect(C : in out ODBC_Connection_Type;
 		Same_As : Root_Connection_Type'Class);
