@@ -10,9 +10,9 @@ with "odbc_helper_lib.gpr";
 project APQ.ODBC is
 	version := APQ.version;
 
-	type Supported_OS is ("WIN32", "GNU/Linux");
+	type Supported_OS is ("Windows_NT", "GNU/Linux");
 
-	target: Supported_OS := external("TARGET", "GNU/Linux");
+	target: Supported_OS := external("OS", "GNU/Linux");
 
 	for Source_Dirs use ( "src" );
 
@@ -38,7 +38,7 @@ project APQ.ODBC is
 				for Default_Switches ("Ada") use
 					APQ.Linker'Default_Switches("Ada") &
 					"-lpq";
-			when "WIN32" =>
+			when "Windows_NT" =>
 				for Default_Switches ("Ada") use
 					APQ.Linker'Default_Switches("Ada");
 		end case;
