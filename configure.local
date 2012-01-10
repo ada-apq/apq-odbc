@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# 
+# Local configuration file for APQ.PostgreSQL
+
+
+
+
+################
+# Project Name #
+################
+
+project="apq-odbc"
+
+
+
+
+###################
+# Standard Checks #
+###################
+check_project apq
+
+
+
+set_configuration APQODBC_EXTERNALLY_BUILT "false"
