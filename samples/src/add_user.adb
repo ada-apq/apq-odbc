@@ -38,7 +38,7 @@ with APQ.ODBC.Client;		use APQ.ODBC.Client;
 with APQ.Samples;		use APQ.Samples;
 
 procedure add_user is
-	C: Connection_Type;
+	C: ODBC_Connection_Type;
 begin
 	Set_Host_Name( C, "localhost" );
 	Set_User_Password( C, "root", "senharoot" );
