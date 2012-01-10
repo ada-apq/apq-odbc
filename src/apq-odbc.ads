@@ -31,7 +31,7 @@
 
 package APQ.ODBC is
 	
-	Pragma Linker_Option( "-lodbc" );
+	Pragma Linker_Options( "-lodbc" );
 
 private
 

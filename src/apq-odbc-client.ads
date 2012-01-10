@@ -39,7 +39,6 @@ with Ada.Strings.Bounded;
 with Ada.Strings.Unbounded;
 with Interfaces.C_Streams;
 
-with APQ.MySQL.Client; --To be removed!
 with APQ.ODBC;
 
 package APQ.ODBC.Client is
